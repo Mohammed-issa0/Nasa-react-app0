@@ -2,7 +2,7 @@ import SideBar from "./components/SideBar";
 import Main from "./components/Main";
 import Footer from "./components/Footer";
 import { useEffect, useState } from "react";
-
+import { saveAs } from "file-saver";
 export default function App() {
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState(null);
@@ -28,6 +28,19 @@ export default function App() {
     fetchApiData();
   }, []);
 
+  const imgurl = function link() {
+    saveAs(data.hdurl, "nasa-image.jpg");
+  };
+  // const imageUrl = ;
+  const downloadImage = () => {
+    const link = document.createElement("a");
+    link.href = data.hdurl;
+    link.download = "nasa-image.jpg";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       {data ? (
@@ -38,7 +51,13 @@ export default function App() {
         </div>
       )}
       {showModal && <SideBar data={data} handleClick={handleClick} />}
-      {data && <Footer data={data} handleClick={handleClick} />}
+      {data && (
+        <Footer
+          downloadImage={downloadImage}
+          data={data}
+          handleClick={handleClick}
+        />
+      )}
     </>
   );
 }
